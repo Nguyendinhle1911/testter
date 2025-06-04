@@ -1,0 +1,266 @@
+[
+  {
+    "id": "TC1",
+    "description": "Kiểm tra để trống Họ",
+    "actions": [
+      {"type": "enter_text", "key": "first_name", "value": ""},
+      {"type": "enter_text", "key": "surname", "value": "Van A"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Vui lòng nhập họ"}
+    ]
+  },
+  {
+    "id": "TC2",
+    "description": "Kiểm tra để trống Tên",
+    "actions": [
+      {"type": "enter_text", "key": "first_name", "value": "Nguyen"},
+      {"type": "enter_text", "key": "surname", "value": ""},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Vui lòng nhập tên"}
+    ]
+  },
+  {
+    "id": "TC3",
+    "description": "Kiểm tra không chọn Ngày",
+    "actions": [
+      {"type": "select_dropdown", "key": "month_dropdown", "value": "05"},
+      {"type": "select_dropdown", "key": "year_dropdown", "value": "2000"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Vui lòng chọn ngày sinh đầy đủ"}
+    ]
+  },
+  {
+    "id": "TC4",
+    "description": "Kiểm tra không chọn Tháng",
+    "actions": [
+      {"type": "select_dropdown", "key": "day_dropdown", "value": "26"},
+      {"type": "select_dropdown", "key": "year_dropdown", "value": "2000"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Vui lòng chọn ngày sinh đầy đủ"}
+    ]
+  },
+  {
+    "id": "TC5",
+    "description": "Kiểm tra không chọn Năm",
+    "actions": [
+      {"type": "select_dropdown", "key": "day_dropdown", "value": "26"},
+      {"type": "select_dropdown", "key": "month_dropdown", "value": "05"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Vui lòng chọn ngày sinh đầy đủ"}
+    ]
+  },
+  {
+    "id": "TC6",
+    "description": "Kiểm tra không chọn Giới tính",
+    "actions": [
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Vui lòng chọn giới tính"}
+    ]
+  },
+  {
+    "id": "TC7",
+    "description": "Kiểm tra để trống Email/SĐT",
+    "actions": [
+      {"type": "enter_text", "key": "email", "value": ""},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Vui lòng nhập số điện thoại hoặc email"}
+    ]
+  },
+  {
+    "id": "TC8",
+    "description": "Kiểm tra Email không hợp lệ (thiếu @)",
+    "actions": [
+      {"type": "enter_text", "key": "email", "value": "abc"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Số điện thoại hoặc email không hợp lệ"}
+    ]
+  },
+  {
+    "id": "TC9",
+    "description": "Kiểm tra Email không hợp lệ (thiếu domain)",
+    "actions": [
+      {"type": "enter_text", "key": "email", "value": "abc@"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Số điện thoại hoặc email không hợp lệ"}
+    ]
+  },
+  {
+    "id": "TC10",
+    "description": "Kiểm tra Email hợp lệ",
+    "actions": [
+      {"type": "enter_text", "key": "email", "value": "test@example.com"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_absent", "key": "error_message"}
+    ]
+  },
+  {
+    "id": "TC11",
+    "description": "Kiểm tra SĐT không hợp lệ (dưới 10 số)",
+    "actions": [
+      {"type": "enter_text", "key": "email", "value": "123"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Số điện thoại hoặc email không hợp lệ"}
+    ]
+  },
+  {
+    "id": "TC12",
+    "description": "Kiểm tra SĐT không hợp lệ (chứa chữ)",
+    "actions": [
+      {"type": "enter_text", "key": "email", "value": "01234abcde"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Số điện thoại hoặc email không hợp lệ"}
+    ]
+  },
+  {
+    "id": "TC13",
+    "description": "Kiểm tra SĐT hợp lệ",
+    "actions": [
+      {"type": "enter_text", "key": "email", "value": "0123456789"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_absent", "key": "error_message"}
+    ]
+  },
+  {
+    "id": "TC14",
+    "description": "Kiểm tra để trống Mật khẩu",
+    "actions": [
+      {"type": "enter_text", "key": "password", "value": ""},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Vui lòng nhập mật khẩu"}
+    ]
+  },
+  {
+    "id": "TC15",
+    "description": "Kiểm tra Mật khẩu dưới 6 ký tự",
+    "actions": [
+      {"type": "enter_text", "key": "password", "value": "12345"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "error_message", "expected": "Mật khẩu phải có ít nhất 6 ký tự"}
+    ]
+  },
+  {
+    "id": "TC16",
+    "description": "Kiểm tra Mật khẩu hợp lệ",
+    "actions": [
+      {"type": "enter_text", "key": "password", "value": "123456"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_absent", "key": "error_message"}
+    ]
+  },
+  {
+    "id": "TC17",
+    "description": "Kiểm tra nhập đầy đủ và hợp lệ",
+    "actions": [
+      {"type": "enter_text", "key": "first_name", "value": "Nguyen"},
+      {"type": "enter_text", "key": "surname", "value": "Van A"},
+      {"type": "select_dropdown", "key": "day_dropdown", "value": "26"},
+      {"type": "select_dropdown", "key": "month_dropdown", "value": "05"},
+      {"type": "select_dropdown", "key": "year_dropdown", "value": "2000"},
+      {"type": "tap", "key": "male_radio"},
+      {"type": "enter_text", "key": "email", "value": "test@example.com"},
+      {"type": "enter_text", "key": "password", "value": "123456"},
+      {"type": "tap", "key": "sign_up_button"},
+      {"type": "check_text", "key": "success_message", "expected": "Đăng ký thành công!"}
+    ]
+  },
+  {
+    "id": "TC18",
+    "description": "Kiểm tra giao diện logo",
+    "actions": [
+      {"type": "check_text", "key": "facebook", "expected": "facebook"}
+    ]
+  },
+  {
+    "id": "TC19",
+    "description": "Kiểm tra giao diện tiêu đề",
+    "actions": [
+      {"type": "check_text", "key": "title", "expected": "Tạo tài khoản mới"},
+      {"type": "check_text", "key": "subtitle", "expected": "Nhanh chóng và dễ dàng."}
+    ]
+  },
+  {
+    "id": "TC20",
+    "description": "Kiểm tra giao diện nút Đăng ký",
+    "actions": [
+      {"type": "check_element", "key": "sign_up_button"}
+    ]
+  },
+  {
+    "id": "TC21",
+    "description": "Kiểm tra giao diện văn bản điều khoản",
+    "actions": [
+      {"type": "check_text", "key": "terms_text", "expected": "By clicking Sign Up"}
+    ]
+  },
+  {
+    "id": "TC22",
+    "description": "Kiểm tra giao diện Bạn đã có tài khoản?",
+    "actions": [
+      {"type": "check_text", "key": "login_link", "expected": "Bạn đã có tài khoản?"}
+    ]
+  },
+  {
+    "id": "TC23",
+    "description": "Kiểm tra bố cục Họ/Tên",
+    "actions": [
+      {"type": "check_element", "key": "first_name"},
+      {"type": "check_element", "key": "surname"}
+    ]
+  },
+  {
+    "id": "TC24",
+    "description": "Kiểm tra bố cục Ngày sinh",
+    "actions": [
+      {"type": "check_element", "key": "day_dropdown"},
+      {"type": "check_element", "key": "month_dropdown"},
+      {"type": "check_element", "key": "year_dropdown"}
+    ]
+  },
+  {
+    "id": "TC25",
+    "description": "Kiểm tra bố cục Giới tính",
+    "actions": [
+      {"type": "check_element", "key": "female_radio"},
+      {"type": "check_element", "key": "male_radio"},
+      {"type": "check_element", "key": "custom_radio"}
+    ]
+  },
+  {
+    "id": "TC26",
+    "description": "Kiểm tra responsive trên 320px",
+    "actions": [
+      {"type": "check_scrollable", "key": "main_scroll"}
+    ]
+  },
+  {
+    "id": "TC27",
+    "description": "Kiểm tra responsive trên 768px",
+    "actions": [
+      {"type": "check_scrollable", "key": "main_scroll"}
+    ]
+  },
+  {
+    "id": "TC28",
+    "description": "Kiểm tra hiệu suất nhập liệu",
+    "actions": [
+      {"type": "measure_performance", "key": "first_name", "action": "enter_text", "value": "Nguyen", "max_ms": 100}
+    ]
+  },
+  {
+    "id": "TC29",
+    "description": "Kiểm tra hiệu suất chọn dropdown",
+    "actions": [
+      {"type": "measure_performance", "key": "day_dropdown", "action": "select_dropdown", "value": "26", "max_ms": 100}
+    ]
+  },
+  {
+    "id": "TC30",
+    "description": "Kiểm tra khả năng tiếp cận (screen reader)",
+    "actions": [
+      {"type": "check_accessibility", "key": "first_name"},
+      {"type": "check_accessibility", "key": "surname"},
+      {"type": "check_accessibility", "key": "email"},
+      {"type": "check_accessibility", "key": "password"}
+    ]
+  }
+]

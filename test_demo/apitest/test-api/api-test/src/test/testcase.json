@@ -1,0 +1,455 @@
+{
+  "info": {
+    "name": "Register API Test Collection",
+    "description": "Test collection cho Register API với các test case đầy đủ",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Happy Path Tests",
+      "item": [
+        {
+          "name": "TC001 - Register với dữ liệu hợp lệ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test Status Code",
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "// Test Response Time",
+                  "pm.test(\"Response time is less than 1000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+                  "});",
+                  "",
+                  "// Test Response Structure",
+                  "pm.test(\"Response has correct structure\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('success', true);",
+                  "    pm.expect(responseJson).to.have.property('message');",
+                  "    pm.expect(responseJson).to.have.property('data');",
+                  "});",
+                  "",
+                  "// Test Response Data",
+                  "pm.test(\"Response data contains user info\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const userData = responseJson.data;",
+                  "    pm.expect(userData).to.have.property('id');",
+                  "    pm.expect(userData).to.have.property('username', 'testuser001');",
+                  "    pm.expect(userData).to.have.property('email', 'testuser001@example.com');",
+                  "    pm.expect(userData).to.not.have.property('password'); // Không trả về password",
+                  "});",
+                  "",
+                  "// Test Content Type",
+                  "pm.test(\"Content-Type is application/json\", function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser001\",\n  \"email\": \"testuser001@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Boundary Tests",
+      "item": [
+        {
+          "name": "TC002 - Username với độ dài tối thiểu (3 ký tự)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Username accepted with minimum length\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.true;",
+                  "    pm.expect(responseJson.data.username).to.eql('abc');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"abc\",\n  \"email\": \"abc@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "TC003 - Password với độ dài tối thiểu (6 ký tự)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Password accepted with minimum length\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"boundarytest\",\n  \"email\": \"boundary@example.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Tests",
+      "item": [
+        {
+          "name": "TC004 - Username quá ngắn (< 3 ký tự)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message for short username\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.false;",
+                  "    pm.expect(responseJson.message).to.eql('Dữ liệu không hợp lệ');",
+                  "    pm.expect(responseJson.data.username).to.include('Username phải từ 3-50 ký tự');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"ab\",\n  \"email\": \"short@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "TC005 - Email không hợp lệ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message for invalid email\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.false;",
+                  "    pm.expect(responseJson.data.email).to.include('Email không hợp lệ');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"invalid-email\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "TC006 - Password quá ngắn (< 6 ký tự)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message for short password\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.false;",
+                  "    pm.expect(responseJson.data.password).to.include('Password phải ít nhất 6 ký tự');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"12345\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "TC007 - Thiếu trường bắt buộc",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message for missing fields\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.false;",
+                  "    pm.expect(responseJson.message).to.eql('Dữ liệu không hợp lệ');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "TC008 - Username đã tồn tại",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message for duplicate username\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.false;",
+                  "    pm.expect(responseJson.message).to.eql('Username đã tồn tại');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser001\",\n  \"email\": \"duplicate@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "TC009 - Email đã tồn tại",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message for duplicate email\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.false;",
+                  "    pm.expect(responseJson.message).to.eql('Email đã tồn tại');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"uniqueuser\",\n  \"email\": \"testuser001@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "TC010 - Request body rỗng",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error handled for empty body\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.false;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Edge Cases",
+      "item": [
+        {
+          "name": "TC011 - Wrong HTTP Method (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 405 (Method Not Allowed)\", function () {",
+                  "    pm.response.to.have.status(405);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "TC012 - Invalid Content-Type",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 or 415\", function () {",
+                  "    pm.expect([400, 415]).to.include(pm.response.code);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "text/plain"}],
+            "body": {
+              "mode": "raw",
+              "raw": "username=test&email=test@example.com&password=password123"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

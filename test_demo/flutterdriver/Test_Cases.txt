@@ -1,0 +1,43 @@
+# Test Case Document
+## Project: Form Đăng ký Người dùng mới giống Facebook
+### Date: May 27, 2025
+### Prepared by: Functional Tester
+
+| Test Case ID | Test Case Description                        | Precondition              | Test Data                                  | Expected Result                              | Actual Result | Status (Pass/Fail) | Notes                  |
+|--------------|----------------------------------------------|---------------------------|--------------------------------------------|---------------------------------------------|---------------|--------------------|-------------------------|
+| TC1          | Kiểm tra để trống Họ                         | Form hiển thị             | Họ: "", Tên: "Van A"                      | Hiển thị "Vui lòng nhập họ"                 |               |                    |                         |
+| TC2          | Kiểm tra để trống Tên                        | Form hiển thị             | Họ: "Nguyen", Tên: ""                     | Hiển thị "Vui lòng nhập tên"                |               |                    |                         |
+| TC3          | Kiểm tra không chọn Ngày                     | Form hiển thị             | Ngày: null, Tháng: "05", Năm: "2000"      | Hiển thị "Vui lòng chọn ngày sinh đầy đủ"   |               |                    |                         |
+| TC4          | Kiểm tra không chọn Tháng                    | Form hiển thị             | Ngày: "26", Tháng: null, Năm: "2000"      | Hiển thị "Vui lòng chọn ngày sinh đầy đủ"   |               |                    |                         |
+| TC5          | Kiểm tra không chọn Năm                      | Form hiển thị             | Ngày: "26", Tháng: "05", Năm: null        | Hiển thị "Vui lòng chọn ngày sinh đầy đủ"   |               |                    |                         |
+| TC6          | Kiểm tra không chọn Giới tính                | Form hiển thị             | Giới tính: null                           | Hiển thị "Vui lòng chọn giới tính"          |               |                    |                         |
+| TC7          | Kiểm tra để trống Email/SĐT                  | Form hiển thị             | Email/SĐT: ""                             | Hiển thị "Vui lòng nhập số điện thoại hoặc email" |               |                    |                         |
+| TC8          | Kiểm tra Email không hợp lệ (thiếu @)        | Form hiển thị             | Email: "abc"                              | Hiển thị "Số điện thoại hoặc email không hợp lệ" |               |                    |                         |
+| TC9          | Kiểm tra Email không hợp lệ (thiếu domain)   | Form hiển thị             | Email: "abc@"                             | Hiển thị "Số điện thoại hoặc email không hợp lệ" |               |                    |                         |
+| TC10         | Kiểm tra Email hợp lệ                        | Form hiển thị             | Email: "test@example.com"                 | Không hiển thị lỗi                          |               |                    |                         |
+| TC11         | Kiểm tra SĐT không hợp lệ (dưới 10 số)       | Form hiển thị             | SĐT: "123"                                | Hiển thị "Số điện thoại hoặc email không hợp lệ" |               |                    |                         |
+| TC12         | Kiểm tra SĐT không hợp lệ (chứa chữ)         | Form hiển thị             | SĐT: "01234abcde"                         | Hiển thị "Số điện thoại hoặc email không hợp lệ" |               |                    |                         |
+| TC13         | Kiểm tra SĐT hợp lệ                         | Form hiển thị             | SĐT: "0123456789"                         | Không hiển thị lỗi                          |               |                    |                         |
+| TC14         | Kiểm tra để trống Mật khẩu                   | Form hiển thị             | Mật khẩu: ""                              | Hiển thị "Vui lòng nhập mật khẩu"           |               |                    |                         |
+| TC15         | Kiểm tra Mật khẩu dưới 6 ký tự               | Form hiển thị             | Mật khẩu: "12345"                         | Hiển thị "Mật khẩu phải có ít nhất 6 ký tự" |               |                    |                         |
+| TC16         | Kiểm tra Mật khẩu hợp lệ                     | Form hiển thị             | Mật khẩu: "123456"                        | Không hiển thị lỗi                          |               |                    |                         |
+| TC17         | Kiểm tra nhập đầy đủ và hợp lệ               | Form hiển thị             | Họ: "Nguyen", Tên: "Van A", Ngày: "26", Tháng: "05", Năm: "2000", Giới tính: "Nam", Email: "test@example.com", Mật khẩu: "123456" | Hiển thị "Đăng ký thành công!" |               |                    |                         |
+| TC18         | Kiểm tra giao diện logo                      | Form hiển thị             | -                                         | Logo "facebook" màu #1877F2, font 40px     |               |                    |                         |
+| TC19         | Kiểm tra giao diện tiêu đề                   | Form hiển thị             | -                                         | "Tạo tài khoản mới" (24px), "Nhanh chóng và dễ dàng." (16px, xám #666666) |               |                    |                         |
+| TC20         | Kiểm tra giao diện nút "Đăng ký"             | Form hiển thị             | -                                         | Nút màu #00A400, toàn chiều rộng, 50px, bo góc 5px |               |                    |                         |
+| TC21         | Kiểm tra giao diện văn bản điều khoản        | Form hiển thị             | -                                         | Văn bản khớp 100% với hình ảnh, font 12px, xám #666666 |               |                    |                         |
+| TC22         | Kiểm tra giao diện "Bạn đã có tài khoản?"    | Form hiển thị             | -                                         | Văn bản màu #1877F2, font 14px, căn giữa   |               |                    |                         |
+| TC23         | Kiểm tra bố cục Họ/Tên                       | Form hiển thị             | -                                         | 2 cột, mỗi cột 50% chiều rộng, khoảng cách 10px |               |                    |                         |
+| TC24         | Kiểm tra bố cục Ngày sinh                    | Form hiển thị             | -                                         | 3 cột, mỗi cột 33% chiều rộng, khoảng cách 10px |               |                    |                         |
+| TC25         | Kiểm tra bố cục Giới tính                    | Form hiển thị             | -                                         | 3 radio button, mỗi tùy chọn 33% chiều rộng |               |                    |                         |
+| TC26         | Kiểm tra responsive trên 320px               | Form hiển thị             | -                                         | Bố cục không vỡ, cuộn tốt                   |               |                    |                         |
+| TC27         | Kiểm tra responsive trên 768px               | Form hiển thị             | -                                         | Bố cục không vỡ, cuộn tốt                   |               |                    |                         |
+| TC28         | Kiểm tra hiệu suất nhập liệu                 | Form hiển thị             | Nhập Họ: "Nguyen"                         | Phản hồi <100ms                             |               |                    |                         |
+| TC29         | Kiểm tra hiệu suất chọn dropdown             | Form hiển thị             | Chọn Ngày: "26"                           | Phản hồi <100ms                             |               |                    |                         |
+| TC30         | Kiểm tra khả năng tiếp cận (screen reader)   | Form hiển thị             | -                                         | Các trường có `labelText` (Họ, Tên, Email/SĐT, Mật khẩu) đọc được |               |                    |                         |
+
+### Hướng dẫn thực hiện
+- **Môi trường kiểm thử**: Emulator Android (Pixel 4, Android 12), thiết bị thực (Samsung A50, Android 11).
+- **Công cụ**: Android Studio (Flutter Inspector), Excel.
+- **Thực hiện**: Chạy từng test case, ghi Actual Result, đánh giá Pass/Fail, ghi chú nếu có lỗi.
+- **Báo cáo**: Gửi kết quả cho BA và lập trình viên nếu có lỗi.

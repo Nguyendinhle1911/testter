@@ -1,0 +1,628 @@
+{
+  "info": {
+    "name": "User API Automation",
+    "_postman_id": "e3f2b8a2-9c1d-4f7b-8b3e-7a5c8f2d9e8c",
+    "description": "Collection for testing User API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create User",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.environment.set(\"timestamp\", Date.now());"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Create User - Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Create User - Response contains correct user data\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.name).to.equal(\"Jane Doe\");",
+              "    pm.expect(jsonData.email).to.include(\"jane.doe\");",
+              "    pm.expect(jsonData.age).to.equal(30);",
+              "    pm.expect(jsonData.address).to.equal(\"456 Oak St\");",
+              "    pm.expect(jsonData.phone).to.equal(\"+84987654321\");",
+              "});",
+              "pm.environment.set(\"userId\", pm.response.json().id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\": \"Jane Doe\", \"email\": \"jane.doe{{timestamp}}@example.com\", \"age\": 30, \"address\": \"456 Oak St\", \"phone\": \"+84987654321\"}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}",
+          "host": ["{{baseUrl}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Get User by ID - Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Get User by ID - Response contains correct user data\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.id).to.equal(parseInt(pm.environment.get(\"userId\")));",
+              "    pm.expect(jsonData.name).to.equal(\"Jane Doe\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{userId}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User by Email",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Get User by Email - Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Get User by Email - Response contains correct email\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.email).to.include(\"jane.doe\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/email/jane.doe{{timestamp}}@example.com",
+          "host": ["{{baseUrl}}"],
+          "path": ["email", "jane.doe{{timestamp}}@example.com"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Update User - Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Update User - Response contains updated data\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.name).to.equal(\"Jane Updated\");",
+              "    pm.expect(jsonData.email).to.include(\"jane.updated\");",
+              "    pm.expect(jsonData.age).to.equal(31);",
+              "    pm.expect(jsonData.address).to.equal(\"789 Pine St\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\": \"Jane Updated\", \"email\": \"jane.updated{{timestamp}}@example.com\", \"age\": 31, \"address\": \"789 Pine St\", \"phone\": \"+84911223344\"}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{userId}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Delete User - Status code is 204\", function () {",
+              "    pm.response.to.have.status(204);",
+              "});",
+              "pm.test(\"Delete User - User no longer exists\", function () {",
+              "    pm.sendRequest({",
+              "        url: pm.environment.get(\"baseUrl\") + \"/\" + pm.environment.get(\"userId\"),",
+              "        method: 'GET'",
+              "    }, function (err, response) {",
+              "        pm.expect(response.code).to.equal(404);",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{userId}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Get All Users - Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Get All Users - Response is an array\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an('array');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}",
+          "host": ["{{baseUrl}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search Users by Name",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Search Users by Name - Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Search Users by Name - Response contains matching users\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an('array');",
+              "    if (jsonData.length > 0) {",
+              "        pm.expect(jsonData[0].name).to.include(\"Jane\");",
+              "    }",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/search?keyword=Jane",
+          "host": ["{{baseUrl}}"],
+          "path": ["search"],
+          "query": [
+            {
+              "key": "keyword",
+              "value": "Jane"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Users by Age Range",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Get Users by Age Range - Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Get Users by Age Range - Ages are within range\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an('array');",
+              "    jsonData.forEach(user => {",
+              "        pm.expect(user.age).to.be.within(20, 40);",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/age-range?minAge=20&maxAge=40",
+          "host": ["{{baseUrl}}"],
+          "path": ["age-range"],
+          "query": [
+            {
+              "key": "minAge",
+              "value": "20"
+            },
+            {
+              "key": "maxAge",
+              "value": "40"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Users by Specific Age",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Get Users by Age - Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Get Users by Age - All users have specified age\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an('array');",
+              "    jsonData.forEach(user => {",
+              "        pm.expect(user.age).to.equal(30);",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/age/30",
+          "host": ["{{baseUrl}}"],
+          "path": ["age", "30"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Users with Pagination",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Get Users with Pagination - Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Get Users with Pagination - Response has correct structure\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('content').that.is.an('array');",
+              "    pm.expect(jsonData).to.have.property('pageable');",
+              "    pm.expect(jsonData).to.have.property('totalElements');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/paged?page=0&size=10&sortBy=id&sortDir=asc",
+          "host": ["{{baseUrl}}"],
+          "path": ["paged"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            },
+            {
+              "key": "sortBy",
+              "value": "id"
+            },
+            {
+              "key": "sortDir",
+              "value": "asc"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search Users with Pagination",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Search Users with Pagination - Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Search Users with Pagination - Response has correct structure\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('content').that.is.an('array');",
+              "    if (jsonData.content.length > 0) {",
+              "        pm.expect(jsonData.content[0].name).to.include(\"Jane\");",
+              "    }",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/search/paged?keyword=Jane&page=0&size=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["search", "paged"],
+          "query": [
+            {
+              "key": "keyword",
+              "value": "Jane"
+            },
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Users by Email Domain",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Get Users by Email Domain - Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Get Users by Email Domain - Emails match domain\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an('array');",
+              "    jsonData.forEach(user => {",
+              "        pm.expect(user.email).to.include(\"@example.com\");",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/domain/example.com",
+          "host": ["{{baseUrl}}"],
+          "path": ["domain", "example.com"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Users Created After",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Get Users Created After - Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Get Users Created After - Created dates are after specified date\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an('array');",
+              "    jsonData.forEach(user => {",
+              "        pm.expect(new Date(user.createdAt)).to.be.above(new Date(\"2025-06-01T00:00:00\"));",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/created-after?date=2025-06-01T00:00:00",
+          "host": ["{{baseUrl}}"],
+          "path": ["created-after"],
+          "query": [
+            {
+              "key": "date",
+              "value": "2025-06-01T00:00:00"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Age Statistics",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Get Age Statistics - Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Get Age Statistics - Response is an array of arrays\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an('array');",
+              "    jsonData.forEach(stat => {",
+              "        pm.expect(stat).to.be.an('array');",
+              "        pm.expect(stat[0]).to.be.a('number');",
+              "        pm.expect(stat[1]).to.be.a('number');",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/age-statistics",
+          "host": ["{{baseUrl}}"],
+          "path": ["age-statistics"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create User - Invalid Email (Negative Case)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Create User Invalid Email - Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\": \"Invalid User\", \"email\": \"invalid-email\", \"age\": 30}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}",
+          "host": ["{{baseUrl}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create User - Boundary Age 18",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.environment.set(\"timestamp\", Date.now());"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Create User Boundary Age 18 - Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Create User Boundary Age 18 - Age is 18\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.age).to.equal(18);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\": \"Young User\", \"email\": \"young.user{{timestamp}}@example.com\", \"age\": 18}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}",
+          "host": ["{{baseUrl}}"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
